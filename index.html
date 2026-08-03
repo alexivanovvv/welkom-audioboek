@@ -83,6 +83,7 @@
     display: flex; align-items: center; justify-content: center;
   }
   .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle svg { width: 1.05rem; height: 1.05rem; }
   .titlepage .kicker {
     font-family: var(--font-body);
     font-size: 0.74rem;
@@ -271,7 +272,7 @@
 <body>
 
 <div class="titlepage">
-  <button class="theme-toggle" id="themeToggle" title="Wissel thema" aria-label="Wissel tussen licht en donker thema">🌙</button>
+  <button class="theme-toggle" id="themeToggle" title="Wissel thema" aria-label="Wissel tussen licht en donker thema"></button>
   <div class="kicker">KNM Prep App</div>
   <div class="flag">🇳🇱</div>
   <h1>Welkom in Nederland</h1>
@@ -415,9 +416,12 @@ function fmtTime(sec) {
 }
 
 // ---------- theme ----------
+const SUN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.22 4.22l1.7 1.7M18.08 18.08l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.22 19.78l1.7-1.7M18.08 5.92l1.7-1.7"/></svg>';
+const MOON_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 15.06A9 9 0 1 1 8.94 3.4a7.2 7.2 0 0 0 11.66 11.66Z"/></svg>';
+
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+  themeToggle.innerHTML = theme === 'dark' ? SUN_ICON : MOON_ICON;
 }
 function currentEffectiveTheme() {
   const stored = localStorage.getItem(THEME_KEY);
