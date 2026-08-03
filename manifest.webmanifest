@@ -1,7 +1,7 @@
 {
-  "name": "Welkom in Nederland — Audioboek",
-  "short_name": "NL Audioboek",
-  "description": "Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Nederlandse termen in het Nederlands, uitleg in het Engels.",
+  "name": "KNM Prep App — Welkom in Nederland",
+  "short_name": "KNM Prep",
+  "description": "Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Engels eerst, Nederlandse kernbegrippen tussen haakjes.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

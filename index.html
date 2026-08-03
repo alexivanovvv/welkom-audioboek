@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Welkom in Nederland — Audioboek</title>
+<title>KNM Prep App — Welkom in Nederland</title>
 
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#9a3324">
-<meta name="description" content="Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Nederlandse termen in het Nederlands, uitleg in het Engels.">
+<meta name="description" content="Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Engels eerst, Nederlandse kernbegrippen tussen haakjes.">
 
 <!-- iOS home screen / standalone app support -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="NL Audioboek">
+<meta name="apple-mobile-web-app-title" content="KNM Prep">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 
@@ -29,6 +29,8 @@
     --track-hover: #e7d9b8;
     --track-active: #ded0a8;
     --shadow: rgba(44, 36, 22, 0.15);
+    --font-display: "Big Caslon", Didot, "Iowan Old Style", Georgia, serif;
+    --font-body: "Iowan Old Style", Charter, Georgia, "Noto Serif", serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -58,21 +60,45 @@
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     margin: 0; padding: 0; background: var(--paper); color: var(--ink);
-    font-family: Iowan Old Style, Charter, Georgia, "Noto Serif", serif;
+    font-family: var(--font-body);
   }
   body { padding-bottom: 110px; overflow-x: hidden; }
 
   .titlepage {
+    position: relative;
     text-align: center;
-    padding: 3.5rem 1.5rem 2rem;
+    padding: 3.2rem 1.5rem 2rem;
     border-bottom: 1px solid var(--rule);
   }
-  .titlepage .flag { font-size: 1.6rem; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 0.6rem; }
+  .theme-toggle {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    width: 2.3rem; height: 2.3rem;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .titlepage .kicker {
+    font-family: var(--font-body);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+  }
+  .titlepage .flag { font-size: 2rem; margin-bottom: 0.5rem; }
   .titlepage h1 {
-    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4.8vw, 3rem);
     margin: 0 0 0.3rem;
     font-weight: 600;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.005em;
   }
   .titlepage .subtitle {
     font-style: italic;
@@ -86,6 +112,12 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+  .titlepage .resume-note {
+    margin-top: 0.9rem;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+  .titlepage .resume-note b { color: var(--accent); font-weight: 600; }
 
   .install-hint {
     max-width: 720px;
@@ -111,30 +143,6 @@
     font-family: inherit; font-size: 0.75rem; border-radius: 6px;
     padding: 0.25rem 0.5rem; cursor: pointer; flex-shrink: 0;
   }
-
-  .continue-bar {
-    max-width: 720px;
-    margin: 1.2rem auto 0;
-    padding: 0 1.2rem;
-    display: none;
-  }
-  .continue-bar.show { display: block; }
-  .continue-card {
-    background: var(--paper-2);
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-    padding: 0.85rem 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .continue-card:hover { background: var(--track-hover); }
-  .continue-card .label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
-  .continue-card .title { font-size: 0.98rem; margin-top: 0.15rem; }
-  .continue-card .icon { font-size: 1.4rem; color: var(--accent); flex-shrink: 0; }
 
   main { max-width: 720px; margin: 0 auto; padding: 1.5rem 1.2rem 2rem; }
 
@@ -165,8 +173,10 @@
     text-transform: uppercase;
     white-space: nowrap;
   }
-  .chapter-head h2 { font-size: 1.15rem; margin: 0; font-weight: 600; flex: 1; }
-  .chapter-head .chev { color: var(--ink-soft); transition: transform 0.2s; font-size: 0.85rem; }
+  .chapter-titles { flex: 1; }
+  .chapter-head h2 { font-family: var(--font-display); font-size: 1.2rem; margin: 0; font-weight: 600; line-height: 1.25; }
+  .chapter-head .ch-en { display: block; font-size: 0.82rem; font-style: italic; font-weight: 400; color: var(--ink-soft); font-family: var(--font-body); margin-top: 0.1rem; }
+  .chapter-head .chev { color: var(--ink-soft); transition: transform 0.2s; font-size: 0.85rem; align-self: center; }
   .chapter.collapsed .chev { transform: rotate(-90deg); }
   .chapter.collapsed .tracklist { display: none; }
 
@@ -191,6 +201,14 @@
   .track.active .marker { color: var(--accent); }
   .track .ttitle { flex: 1; font-size: 0.97rem; }
   .track.active .ttitle { color: var(--accent); font-weight: 600; }
+  .track.listened:not(.active) .ttitle { color: var(--ink-soft); }
+  .track .check {
+    font-size: 0.85rem;
+    color: var(--accent-soft);
+    flex-shrink: 0;
+    width: 1.1rem;
+    text-align: center;
+  }
   .track .dur { font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; flex-shrink: 0; }
 
   /* bottom player */
@@ -224,10 +242,10 @@
     background: var(--accent); cursor: pointer; margin-top: -4.5px;
   }
   #seek::-webkit-slider-thumb { margin-top: -4.5px; }
-  .controlsrow { display: flex; align-items: center; justify-content: center; gap: 0.9rem; position: relative; }
+  .controlsrow { display: flex; align-items: center; justify-content: center; gap: 0.75rem; position: relative; }
   .ctrlbtn {
     background: none; border: none; color: var(--ink); cursor: pointer;
-    font-family: inherit; font-size: 1.35rem; line-height: 1; padding: 0.3rem 0.5rem;
+    font-family: inherit; font-size: 1.35rem; line-height: 1; padding: 0.3rem 0.4rem;
     display: flex; align-items: center; justify-content: center;
   }
   .ctrlbtn.small { font-size: 1.05rem; color: var(--ink-soft); }
@@ -241,8 +259,8 @@
   .speedbtn {
     position: absolute; right: 0;
     background: none; border: 1px solid var(--rule); color: var(--ink-soft);
-    font-family: inherit; font-size: 0.78rem; border-radius: 6px;
-    padding: 0.25rem 0.5rem; cursor: pointer;
+    font-family: inherit; font-size: 0.74rem; border-radius: 6px;
+    padding: 0.25rem 0.4rem; cursor: pointer;
   }
   .speedbtn:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -253,26 +271,19 @@
 <body>
 
 <div class="titlepage">
-  <div class="flag">🧡 ⬜ 💙</div>
+  <button class="theme-toggle" id="themeToggle" title="Wissel thema" aria-label="Wissel tussen licht en donker thema">🌙</button>
+  <div class="kicker">KNM Prep App</div>
+  <div class="flag">🇳🇱</div>
   <h1>Welkom in Nederland</h1>
-  <div class="subtitle">Audioboek — samenvatting met kernbegrippen</div>
-  <div class="meta">7 hoofdstukken · 36 taken · NL termen in het Nederlands, EN in het Engels</div>
+  <div class="subtitle">Audioboek — Engels eerst, Nederlands tussen haakjes</div>
+  <div class="meta">7 hoofdstukken · 36 taken</div>
+  <div class="resume-note" id="resumeNote" style="display:none"></div>
 </div>
 
 <div class="install-hint" id="installHint">
   <div class="install-card">
     <span>Zet dit op je beginscherm: Deel-knop → "Zet op beginscherm".</span>
     <button id="dismissInstall">OK</button>
-  </div>
-</div>
-
-<div class="continue-bar" id="continueBar">
-  <div class="continue-card" id="continueCard">
-    <div>
-      <div class="label">Verder luisteren</div>
-      <div class="title" id="continueTitle">—</div>
-    </div>
-    <div class="icon">▶</div>
   </div>
 </div>
 
@@ -302,13 +313,13 @@
   </div>
 </div>
 
-<footer>Gegenereerd uit "Welkom in Nederland — Summary with Key Terms (EN)" · edge-tts (en-US-GuyNeural / nl-NL-MaartenNeural)</footer>
+<footer>Gegenereerd uit "Welkom in Nederland — Voiceover Script (EN-NL)" · edge-tts (en-US-GuyNeural / nl-NL-MaartenNeural)</footer>
 
 <audio id="audio" preload="none"></audio>
 
 <script>
 const BOOK = [
-  { ch: 1, chTitle: "Samenleven in Nederland", tasks: [
+  { ch: 1, chTitle: "Samenleven in Nederland", chTitleEn: "Living together in the Netherlands", tasks: [
     { t: 1, title: "Feestdagen", file: "Welkom in Nederland - H1 T1 Feestdagen.mp3" },
     { t: 2, title: "Familiedagen", file: "Welkom in Nederland - H1 T2 Familiedagen.mp3" },
     { t: 3, title: "Afspraken maken", file: "Welkom in Nederland - H1 T3 Afspraken maken.mp3" },
@@ -316,13 +327,13 @@ const BOOK = [
     { t: 5, title: "Relaties", file: "Welkom in Nederland - H1 T5 Relaties.mp3" },
     { t: 6, title: "Organisaties en verenigingen", file: "Welkom in Nederland - H1 T6 Organisaties en verenigingen.mp3" },
   ]},
-  { ch: 2, chTitle: "Gezondheid in Nederland", tasks: [
+  { ch: 2, chTitle: "Gezondheid in Nederland", chTitleEn: "Health in the Netherlands", tasks: [
     { t: 1, title: "De huisarts en de tandarts", file: "Welkom in Nederland - H2 T1 De huisarts en de tandarts.mp3" },
     { t: 2, title: "Snel hulp nodig", file: "Welkom in Nederland - H2 T2 Snel hulp nodig.mp3" },
     { t: 3, title: "Zelf beslissen over je lichaam", file: "Welkom in Nederland - H2 T3 Zelf beslissen over je lichaam.mp3" },
     { t: 4, title: "De zorgverzekering", file: "Welkom in Nederland - H2 T4 De zorgverzekering.mp3" },
   ]},
-  { ch: 3, chTitle: "Wonen in Nederland", tasks: [
+  { ch: 3, chTitle: "Wonen in Nederland", chTitleEn: "Housing in the Netherlands", tasks: [
     { t: 1, title: "Het land Nederland", file: "Welkom in Nederland - H3 T1 Het land Nederland.mp3" },
     { t: 2, title: "Wonen in een land met veel water", file: "Welkom in Nederland - H3 T2 Wonen in een land met veel water.mp3" },
     { t: 3, title: "Het openbaar vervoer (OV)", file: "Welkom in Nederland - H3 T3 Het openbaar vervoer (OV).mp3" },
@@ -330,21 +341,21 @@ const BOOK = [
     { t: 5, title: "Het afval", file: "Welkom in Nederland - H3 T5 Het afval.mp3" },
     { t: 6, title: "Wat je nog meer nodig hebt", file: "Welkom in Nederland - H3 T6 Wat je nog meer nodig hebt.mp3" },
   ]},
-  { ch: 4, chTitle: "Opvoeding en onderwijs in Nederland", tasks: [
+  { ch: 4, chTitle: "Opvoeding en onderwijs in Nederland", chTitleEn: "Raising children and education in the Netherlands", tasks: [
     { t: 1, title: "Zorgen voor je kinderen", file: "Welkom in Nederland - H4 T1 Zorgen voor je kinderen.mp3" },
     { t: 2, title: "Het onderwijs in Nederland", file: "Welkom in Nederland - H4 T2 Het onderwijs in Nederland.mp3" },
     { t: 3, title: "Wat moet en wat mag in het onderwijs", file: "Welkom in Nederland - H4 T3 Wat moet en wat mag in het onderwijs.mp3" },
     { t: 4, title: "Opleidingen en cursussen voor volwassenen", file: "Welkom in Nederland - H4 T4 Opleidingen en cursussen voor volwassenen.mp3" },
     { t: 5, title: "Wat betaal je voor het onderwijs?", file: "Welkom in Nederland - H4 T5 Wat betaal je voor het onderwijs?.mp3" },
   ]},
-  { ch: 5, chTitle: "Werken in Nederland", tasks: [
+  { ch: 5, chTitle: "Werken in Nederland", chTitleEn: "Working in the Netherlands", tasks: [
     { t: 1, title: "Werk vinden", file: "Welkom in Nederland - H5 T1 Werk vinden.mp3" },
     { t: 2, title: "Welk werk past bij je?", file: "Welkom in Nederland - H5 T2 Welk werk past bij je?.mp3" },
     { t: 3, title: "Wat moet en wat mag als je werk hebt", file: "Welkom in Nederland - H5 T3 Wat moet en wat mag als je werk hebt.mp3" },
     { t: 4, title: "Als je niet genoeg geld hebt om van te leven", file: "Welkom in Nederland - H5 T4 Als je niet genoeg geld hebt om van te leven.mp3" },
     { t: 5, title: "Discriminatie op je werk", file: "Welkom in Nederland - H5 T5 Discriminatie op je werk.mp3" },
   ]},
-  { ch: 6, chTitle: "Instanties in Nederland", tasks: [
+  { ch: 6, chTitle: "Instanties in Nederland", chTitleEn: "Authorities in the Netherlands", tasks: [
     { t: 1, title: "Contact met instanties", file: "Welkom in Nederland - H6 T1 Contact met instanties.mp3" },
     { t: 2, title: "De gemeente", file: "Welkom in Nederland - H6 T2 De gemeente.mp3" },
     { t: 3, title: "De politie", file: "Welkom in Nederland - H6 T3 De politie.mp3" },
@@ -353,7 +364,7 @@ const BOOK = [
     { t: 6, title: "Verblijfsvergunningen en de Nederlandse nationaliteit", file: "Welkom in Nederland - H6 T6 Verblijfsvergunningen en de Nederlandse nationaliteit.mp3" },
     { t: 7, title: "Andere organisaties die je kunnen helpen", file: "Welkom in Nederland - H6 T7 Andere organisaties die je kunnen helpen.mp3" },
   ]},
-  { ch: 7, chTitle: "De Nederlandse staat", tasks: [
+  { ch: 7, chTitle: "De Nederlandse staat", chTitleEn: "The Dutch state", tasks: [
     { t: 1, title: "De geschiedenis van Nederland", file: "Welkom in Nederland - H7 T1 De geschiedenis van Nederland.mp3" },
     { t: 2, title: "Het bestuur van Nederland", file: "Welkom in Nederland - H7 T2 Het bestuur van Nederland.mp3" },
     { t: 3, title: "Nederland als rechtsstaat", file: "Welkom in Nederland - H7 T3 Nederland als rechtsstaat.mp3" },
@@ -379,19 +390,20 @@ const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const speedBtn = document.getElementById('speedBtn');
 const autoplayToggle = document.getElementById('autoplayToggle');
-const continueBar = document.getElementById('continueBar');
-const continueCard = document.getElementById('continueCard');
-const continueTitle = document.getElementById('continueTitle');
 const installHint = document.getElementById('installHint');
 const dismissInstall = document.getElementById('dismissInstall');
+const themeToggle = document.getElementById('themeToggle');
+const resumeNote = document.getElementById('resumeNote');
 
-const SPEEDS = [1, 1.25, 1.5, 1.75, 2, 0.75];
-let speedIdx = 0;
+const SPEEDS = [0.8, 1, 1.1, 1.2, 1.5, 2];
+let speedIdx = 1; // 1x
 let currentIndex = -1;
 let isSeeking = false;
 
 const STORAGE_KEY = 'welkomAudiobookProgress';
 const INSTALL_DISMISS_KEY = 'welkomInstallHintDismissed';
+const THEME_KEY = 'welkomTheme';
+const LISTENED_KEY = 'welkomListened';
 
 function trackId(track) { return `H${track.ch}T${track.t}`; }
 function fileUrl(file) { return 'Audio/' + encodeURIComponent(file); }
@@ -402,6 +414,52 @@ function fmtTime(sec) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+// ---------- theme ----------
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+function currentEffectiveTheme() {
+  const stored = localStorage.getItem(THEME_KEY);
+  if (stored) return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+applyTheme(currentEffectiveTheme());
+themeToggle.addEventListener('click', () => {
+  const next = currentEffectiveTheme() === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+});
+
+// ---------- listened tracking ----------
+function loadListened() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(LISTENED_KEY)) || []);
+  } catch { return new Set(); }
+}
+const listened = loadListened();
+function saveListened() {
+  localStorage.setItem(LISTENED_KEY, JSON.stringify([...listened]));
+}
+function markListened(index) {
+  const track = PLAYLIST[index];
+  if (!track) return;
+  listened.add(trackId(track));
+  saveListened();
+  updateListenedUI();
+}
+function updateListenedUI() {
+  document.querySelectorAll('.track').forEach(el => {
+    const idx = Number(el.dataset.index);
+    const track = PLAYLIST[idx];
+    const isListened = track && listened.has(trackId(track));
+    el.classList.toggle('listened', isListened);
+    const check = el.querySelector('.check');
+    if (check) check.textContent = isListened ? '✓' : '';
+  });
+}
+
+// ---------- progress ----------
 function saveProgress() {
   if (currentIndex < 0) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -409,7 +467,6 @@ function saveProgress() {
     time: audio.currentTime || 0,
   }));
 }
-
 function loadProgress() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -425,7 +482,7 @@ function renderChapters() {
 
     const head = document.createElement('div');
     head.className = 'chapter-head';
-    head.innerHTML = `<span class="num">Hoofdstuk ${chapter.ch}</span><h2>${chapter.chTitle}</h2><span class="chev">▾</span>`;
+    head.innerHTML = `<span class="num">Hoofdstuk ${chapter.ch}</span><div class="chapter-titles"><h2>${chapter.chTitle}<span class="ch-en">${chapter.chTitleEn}</span></h2></div><span class="chev">▾</span>`;
     head.addEventListener('click', () => chapterEl.classList.toggle('collapsed'));
     chapterEl.appendChild(head);
 
@@ -436,13 +493,14 @@ function renderChapters() {
       const li = document.createElement('li');
       li.className = 'track';
       li.dataset.index = idx;
-      li.innerHTML = `<span class="marker">${task.t}</span><span class="ttitle">${task.title}</span><span class="dur" data-file="${task.file}">--:--</span>`;
+      li.innerHTML = `<span class="marker">${task.t}</span><span class="ttitle">${task.title}</span><span class="check"></span><span class="dur" data-file="${task.file}">--:--</span>`;
       li.addEventListener('click', () => loadTrack(idx, true));
       list.appendChild(li);
     });
     chapterEl.appendChild(list);
     chaptersEl.appendChild(chapterEl);
   });
+  updateListenedUI();
 }
 
 function loadDurations() {
@@ -469,7 +527,6 @@ function loadTrack(index, autoplay) {
   audio.src = fileUrl(track.file);
   nowPlayingEl.innerHTML = `Hoofdstuk ${track.ch} · Taak ${track.t} — <b>${track.title}</b>`;
   highlightActiveTrack();
-  continueBar.classList.remove('show');
   if (autoplay) {
     audio.play().catch(() => {});
   }
@@ -504,6 +561,7 @@ audio.addEventListener('pause', updatePlayIcon);
 audio.addEventListener('loadedmetadata', () => {
   seek.max = audio.duration || 0;
   durTimeEl.textContent = fmtTime(audio.duration);
+  audio.playbackRate = SPEEDS[speedIdx];
 });
 audio.addEventListener('timeupdate', () => {
   if (isSeeking) return;
@@ -511,6 +569,7 @@ audio.addEventListener('timeupdate', () => {
   curTimeEl.textContent = fmtTime(audio.currentTime);
 });
 audio.addEventListener('ended', () => {
+  markListened(currentIndex);
   if (autoplayToggle.checked && currentIndex < PLAYLIST.length - 1) {
     loadTrack(currentIndex + 1, true);
   }
@@ -521,17 +580,6 @@ window.addEventListener('beforeunload', saveProgress);
 seek.addEventListener('input', () => { isSeeking = true; curTimeEl.textContent = fmtTime(Number(seek.value)); });
 seek.addEventListener('change', () => { audio.currentTime = Number(seek.value); isSeeking = false; });
 
-continueCard.addEventListener('click', () => {
-  const p = loadProgress();
-  if (!p) return;
-  loadTrack(p.index, false);
-  audio.addEventListener('loadedmetadata', function once() {
-    audio.currentTime = p.time || 0;
-    audio.play().catch(() => {});
-    audio.removeEventListener('loadedmetadata', once);
-  });
-});
-
 document.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
   if (e.code === 'Space') { e.preventDefault(); playBtn.click(); }
@@ -541,11 +589,24 @@ document.addEventListener('keydown', (e) => {
 
 renderChapters();
 loadDurations();
+speedBtn.textContent = SPEEDS[speedIdx] + '×';
 
+// resume exactly where we left off — no extra tap needed, just press play
 const saved = loadProgress();
 if (saved && PLAYLIST[saved.index]) {
-  continueTitle.textContent = `${PLAYLIST[saved.index].title} (H${PLAYLIST[saved.index].ch} T${PLAYLIST[saved.index].t}) · ${fmtTime(saved.time)}`;
-  continueBar.classList.add('show');
+  const track = PLAYLIST[saved.index];
+  currentIndex = saved.index;
+  audio.src = fileUrl(track.file);
+  nowPlayingEl.innerHTML = `Hoofdstuk ${track.ch} · Taak ${track.t} — <b>${track.title}</b>`;
+  highlightActiveTrack();
+  audio.addEventListener('loadedmetadata', function once() {
+    audio.currentTime = saved.time || 0;
+    seek.value = audio.currentTime;
+    curTimeEl.textContent = fmtTime(audio.currentTime);
+    audio.removeEventListener('loadedmetadata', once);
+  });
+  resumeNote.innerHTML = `Hervat automatisch bij <b>${track.title}</b> · ${fmtTime(saved.time)}`;
+  resumeNote.style.display = 'block';
 }
 
 // iOS "add to home screen" hint (only in Safari, not already installed, not dismissed)
