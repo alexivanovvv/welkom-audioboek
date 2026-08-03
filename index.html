@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Welkom in Nederland — Audioboek</title>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#9a3324">
+<meta name="description" content="Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Nederlandse termen in het Nederlands, uitleg in het Engels.">
+
+<!-- iOS home screen / standalone app support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NL Audioboek">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+<style>
+  :root {
+    --paper: #f4ecd8;
+    --paper-2: #ece1c8;
+    --ink: #2c2416;
+    --ink-soft: #5b5240;
+    --rule: #d8c9a3;
+    --accent: #9a3324;
+    --accent-soft: #c65b45;
+    --track-hover: #e7d9b8;
+    --track-active: #ded0a8;
+    --shadow: rgba(44, 36, 22, 0.15);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1c1810;
+      --paper-2: #241f16;
+      --ink: #ece3ce;
+      --ink-soft: #b7ab8e;
+      --rule: #3c3323;
+      --accent: #d97a5f;
+      --accent-soft: #e39a85;
+      --track-hover: #2c2618;
+      --track-active: #342c1c;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1c1810; --paper-2: #241f16; --ink: #ece3ce; --ink-soft: #b7ab8e;
+    --rule: #3c3323; --accent: #d97a5f; --accent-soft: #e39a85;
+    --track-hover: #2c2618; --track-active: #342c1c; --shadow: rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --paper: #f4ecd8; --paper-2: #ece1c8; --ink: #2c2416; --ink-soft: #5b5240;
+    --rule: #d8c9a3; --accent: #9a3324; --accent-soft: #c65b45;
+    --track-hover: #e7d9b8; --track-active: #ded0a8; --shadow: rgba(44,36,22,0.15);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; background: var(--paper); color: var(--ink);
+    font-family: Iowan Old Style, Charter, Georgia, "Noto Serif", serif;
+  }
+  body { padding-bottom: 110px; overflow-x: hidden; }
+
+  .titlepage {
+    text-align: center;
+    padding: 3.5rem 1.5rem 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .titlepage .flag { font-size: 1.6rem; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 0.6rem; }
+  .titlepage h1 {
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    margin: 0 0 0.3rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .titlepage .subtitle {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1rem;
+  }
+  .titlepage .meta {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .install-hint {
+    max-width: 720px;
+    margin: 1rem auto 0;
+    padding: 0 1.2rem;
+    display: none;
+  }
+  .install-hint.show { display: block; }
+  .install-card {
+    background: var(--paper-2);
+    border: 1px dashed var(--rule);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+  .install-card button {
+    background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+    font-family: inherit; font-size: 0.75rem; border-radius: 6px;
+    padding: 0.25rem 0.5rem; cursor: pointer; flex-shrink: 0;
+  }
+
+  .continue-bar {
+    max-width: 720px;
+    margin: 1.2rem auto 0;
+    padding: 0 1.2rem;
+    display: none;
+  }
+  .continue-bar.show { display: block; }
+  .continue-card {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .continue-card:hover { background: var(--track-hover); }
+  .continue-card .label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+  .continue-card .title { font-size: 0.98rem; margin-top: 0.15rem; }
+  .continue-card .icon { font-size: 1.4rem; color: var(--accent); flex-shrink: 0; }
+
+  main { max-width: 720px; margin: 0 auto; padding: 1.5rem 1.2rem 2rem; }
+
+  .toc-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+  .toc-controls label { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; user-select: none; }
+
+  .chapter { margin-bottom: 1.6rem; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--paper-2); }
+  .chapter-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.95rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .chapter-head .num {
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .chapter-head h2 { font-size: 1.15rem; margin: 0; font-weight: 600; flex: 1; }
+  .chapter-head .chev { color: var(--ink-soft); transition: transform 0.2s; font-size: 0.85rem; }
+  .chapter.collapsed .chev { transform: rotate(-90deg); }
+  .chapter.collapsed .tracklist { display: none; }
+
+  .tracklist { list-style: none; margin: 0; padding: 0.3rem 0; }
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .track:hover { background: var(--track-hover); }
+  .track.active { background: var(--track-active); }
+  .track .marker {
+    width: 1.6rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+  .track.active .marker { color: var(--accent); }
+  .track .ttitle { flex: 1; font-size: 0.97rem; }
+  .track.active .ttitle { color: var(--accent); font-weight: 600; }
+  .track .dur { font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+  /* bottom player */
+  .player {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: var(--paper-2);
+    border-top: 1px solid var(--rule);
+    box-shadow: 0 -4px 18px var(--shadow);
+    padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom));
+  }
+  .player-inner { max-width: 720px; margin: 0 auto; }
+  .player .now {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .player .now b { color: var(--ink); font-weight: 600; }
+  .seekrow { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.55rem; }
+  .seekrow .time { font-size: 0.75rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; width: 2.6rem; flex-shrink: 0; }
+  .seekrow .time.end { text-align: right; }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    flex: 1; height: 4px; border-radius: 2px;
+    background: var(--rule); outline: none; cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--accent); cursor: pointer; margin-top: -4.5px;
+  }
+  #seek::-webkit-slider-thumb { margin-top: -4.5px; }
+  .controlsrow { display: flex; align-items: center; justify-content: center; gap: 0.9rem; position: relative; }
+  .ctrlbtn {
+    background: none; border: none; color: var(--ink); cursor: pointer;
+    font-family: inherit; font-size: 1.35rem; line-height: 1; padding: 0.3rem 0.5rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ctrlbtn.small { font-size: 1.05rem; color: var(--ink-soft); }
+  .ctrlbtn:hover { color: var(--accent); }
+  #playBtn {
+    width: 2.6rem; height: 2.6rem; border-radius: 50%;
+    background: var(--accent); color: var(--paper);
+    font-size: 1.15rem;
+  }
+  #playBtn:hover { background: var(--accent-soft); color: var(--paper); }
+  .speedbtn {
+    position: absolute; right: 0;
+    background: none; border: 1px solid var(--rule); color: var(--ink-soft);
+    font-family: inherit; font-size: 0.78rem; border-radius: 6px;
+    padding: 0.25rem 0.5rem; cursor: pointer;
+  }
+  .speedbtn:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer { text-align: center; padding: 1.2rem; font-size: 0.75rem; color: var(--ink-soft); }
+  a.src-link { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="titlepage">
+  <div class="flag">🧡 ⬜ 💙</div>
+  <h1>Welkom in Nederland</h1>
+  <div class="subtitle">Audioboek — samenvatting met kernbegrippen</div>
+  <div class="meta">7 hoofdstukken · 36 taken · NL termen in het Nederlands, EN in het Engels</div>
+</div>
+
+<div class="install-hint" id="installHint">
+  <div class="install-card">
+    <span>Zet dit op je beginscherm: Deel-knop → "Zet op beginscherm".</span>
+    <button id="dismissInstall">OK</button>
+  </div>
+</div>
+
+<div class="continue-bar" id="continueBar">
+  <div class="continue-card" id="continueCard">
+    <div>
+      <div class="label">Verder luisteren</div>
+      <div class="title" id="continueTitle">—</div>
+    </div>
+    <div class="icon">▶</div>
+  </div>
+</div>
+
+<main>
+  <div class="toc-controls">
+    <label><input type="checkbox" id="autoplayToggle" checked> Doorspelen naar volgende taak</label>
+  </div>
+  <div id="chapters"></div>
+</main>
+
+<div class="player">
+  <div class="player-inner">
+    <div class="now" id="nowPlaying">Kies een hoofdstuk om te beginnen</div>
+    <div class="seekrow">
+      <span class="time" id="curTime">0:00</span>
+      <input type="range" id="seek" min="0" max="100" value="0" step="0.1">
+      <span class="time end" id="durTime">0:00</span>
+    </div>
+    <div class="controlsrow">
+      <button class="ctrlbtn small" id="prevBtn" title="Vorige taak">⏮</button>
+      <button class="ctrlbtn small" id="back15" title="15s terug">⟲15</button>
+      <button class="ctrlbtn" id="playBtn" title="Afspelen/Pauzeren">▶</button>
+      <button class="ctrlbtn small" id="fwd15" title="15s vooruit">15⟳</button>
+      <button class="ctrlbtn small" id="nextBtn" title="Volgende taak">⏭</button>
+      <button class="speedbtn" id="speedBtn">1×</button>
+    </div>
+  </div>
+</div>
+
+<footer>Gegenereerd uit "Welkom in Nederland — Summary with Key Terms (EN)" · edge-tts (en-US-GuyNeural / nl-NL-MaartenNeural)</footer>
+
+<audio id="audio" preload="none"></audio>
+
+<script>
+const BOOK = [
+  { ch: 1, chTitle: "Samenleven in Nederland", tasks: [
+    { t: 1, title: "Feestdagen", file: "Welkom in Nederland - H1 T1 Feestdagen.mp3" },
+    { t: 2, title: "Familiedagen", file: "Welkom in Nederland - H1 T2 Familiedagen.mp3" },
+    { t: 3, title: "Afspraken maken", file: "Welkom in Nederland - H1 T3 Afspraken maken.mp3" },
+    { t: 4, title: "Contacten", file: "Welkom in Nederland - H1 T4 Contacten.mp3" },
+    { t: 5, title: "Relaties", file: "Welkom in Nederland - H1 T5 Relaties.mp3" },
+    { t: 6, title: "Organisaties en verenigingen", file: "Welkom in Nederland - H1 T6 Organisaties en verenigingen.mp3" },
+  ]},
+  { ch: 2, chTitle: "Gezondheid in Nederland", tasks: [
+    { t: 1, title: "De huisarts en de tandarts", file: "Welkom in Nederland - H2 T1 De huisarts en de tandarts.mp3" },
+    { t: 2, title: "Snel hulp nodig", file: "Welkom in Nederland - H2 T2 Snel hulp nodig.mp3" },
+    { t: 3, title: "Zelf beslissen over je lichaam", file: "Welkom in Nederland - H2 T3 Zelf beslissen over je lichaam.mp3" },
+    { t: 4, title: "De zorgverzekering", file: "Welkom in Nederland - H2 T4 De zorgverzekering.mp3" },
+  ]},
+  { ch: 3, chTitle: "Wonen in Nederland", tasks: [
+    { t: 1, title: "Het land Nederland", file: "Welkom in Nederland - H3 T1 Het land Nederland.mp3" },
+    { t: 2, title: "Wonen in een land met veel water", file: "Welkom in Nederland - H3 T2 Wonen in een land met veel water.mp3" },
+    { t: 3, title: "Het openbaar vervoer (OV)", file: "Welkom in Nederland - H3 T3 Het openbaar vervoer (OV).mp3" },
+    { t: 4, title: "Een woning zoeken", file: "Welkom in Nederland - H3 T4 Een woning zoeken.mp3" },
+    { t: 5, title: "Het afval", file: "Welkom in Nederland - H3 T5 Het afval.mp3" },
+    { t: 6, title: "Wat je nog meer nodig hebt", file: "Welkom in Nederland - H3 T6 Wat je nog meer nodig hebt.mp3" },
+  ]},
+  { ch: 4, chTitle: "Opvoeding en onderwijs in Nederland", tasks: [
+    { t: 1, title: "Zorgen voor je kinderen", file: "Welkom in Nederland - H4 T1 Zorgen voor je kinderen.mp3" },
+    { t: 2, title: "Het onderwijs in Nederland", file: "Welkom in Nederland - H4 T2 Het onderwijs in Nederland.mp3" },
+    { t: 3, title: "Wat moet en wat mag in het onderwijs", file: "Welkom in Nederland - H4 T3 Wat moet en wat mag in het onderwijs.mp3" },
+    { t: 4, title: "Opleidingen en cursussen voor volwassenen", file: "Welkom in Nederland - H4 T4 Opleidingen en cursussen voor volwassenen.mp3" },
+    { t: 5, title: "Wat betaal je voor het onderwijs?", file: "Welkom in Nederland - H4 T5 Wat betaal je voor het onderwijs?.mp3" },
+  ]},
+  { ch: 5, chTitle: "Werken in Nederland", tasks: [
+    { t: 1, title: "Werk vinden", file: "Welkom in Nederland - H5 T1 Werk vinden.mp3" },
+    { t: 2, title: "Welk werk past bij je?", file: "Welkom in Nederland - H5 T2 Welk werk past bij je?.mp3" },
+    { t: 3, title: "Wat moet en wat mag als je werk hebt", file: "Welkom in Nederland - H5 T3 Wat moet en wat mag als je werk hebt.mp3" },
+    { t: 4, title: "Als je niet genoeg geld hebt om van te leven", file: "Welkom in Nederland - H5 T4 Als je niet genoeg geld hebt om van te leven.mp3" },
+    { t: 5, title: "Discriminatie op je werk", file: "Welkom in Nederland - H5 T5 Discriminatie op je werk.mp3" },
+  ]},
+  { ch: 6, chTitle: "Instanties in Nederland", tasks: [
+    { t: 1, title: "Contact met instanties", file: "Welkom in Nederland - H6 T1 Contact met instanties.mp3" },
+    { t: 2, title: "De gemeente", file: "Welkom in Nederland - H6 T2 De gemeente.mp3" },
+    { t: 3, title: "De politie", file: "Welkom in Nederland - H6 T3 De politie.mp3" },
+    { t: 4, title: "Verzekeringen", file: "Welkom in Nederland - H6 T4 Verzekeringen.mp3" },
+    { t: 5, title: "De Belastingdienst", file: "Welkom in Nederland - H6 T5 De Belastingdienst.mp3" },
+    { t: 6, title: "Verblijfsvergunningen en de Nederlandse nationaliteit", file: "Welkom in Nederland - H6 T6 Verblijfsvergunningen en de Nederlandse nationaliteit.mp3" },
+    { t: 7, title: "Andere organisaties die je kunnen helpen", file: "Welkom in Nederland - H6 T7 Andere organisaties die je kunnen helpen.mp3" },
+  ]},
+  { ch: 7, chTitle: "De Nederlandse staat", tasks: [
+    { t: 1, title: "De geschiedenis van Nederland", file: "Welkom in Nederland - H7 T1 De geschiedenis van Nederland.mp3" },
+    { t: 2, title: "Het bestuur van Nederland", file: "Welkom in Nederland - H7 T2 Het bestuur van Nederland.mp3" },
+    { t: 3, title: "Nederland als rechtsstaat", file: "Welkom in Nederland - H7 T3 Nederland als rechtsstaat.mp3" },
+  ]},
+];
+
+// flat playlist in book order
+const PLAYLIST = [];
+BOOK.forEach(chapter => {
+  chapter.tasks.forEach(task => {
+    PLAYLIST.push({ ...task, ch: chapter.ch, chTitle: chapter.chTitle });
+  });
+});
+
+const audio = document.getElementById('audio');
+const chaptersEl = document.getElementById('chapters');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const seek = document.getElementById('seek');
+const curTimeEl = document.getElementById('curTime');
+const durTimeEl = document.getElementById('durTime');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const speedBtn = document.getElementById('speedBtn');
+const autoplayToggle = document.getElementById('autoplayToggle');
+const continueBar = document.getElementById('continueBar');
+const continueCard = document.getElementById('continueCard');
+const continueTitle = document.getElementById('continueTitle');
+const installHint = document.getElementById('installHint');
+const dismissInstall = document.getElementById('dismissInstall');
+
+const SPEEDS = [1, 1.25, 1.5, 1.75, 2, 0.75];
+let speedIdx = 0;
+let currentIndex = -1;
+let isSeeking = false;
+
+const STORAGE_KEY = 'welkomAudiobookProgress';
+const INSTALL_DISMISS_KEY = 'welkomInstallHintDismissed';
+
+function trackId(track) { return `H${track.ch}T${track.t}`; }
+function fileUrl(file) { return 'Audio/' + encodeURIComponent(file); }
+function fmtTime(sec) {
+  if (!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function saveProgress() {
+  if (currentIndex < 0) return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    index: currentIndex,
+    time: audio.currentTime || 0,
+  }));
+}
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY));
+  } catch { return null; }
+}
+
+function renderChapters() {
+  chaptersEl.innerHTML = '';
+  BOOK.forEach(chapter => {
+    const chapterEl = document.createElement('div');
+    chapterEl.className = 'chapter';
+    chapterEl.dataset.ch = chapter.ch;
+
+    const head = document.createElement('div');
+    head.className = 'chapter-head';
+    head.innerHTML = `<span class="num">Hoofdstuk ${chapter.ch}</span><h2>${chapter.chTitle}</h2><span class="chev">▾</span>`;
+    head.addEventListener('click', () => chapterEl.classList.toggle('collapsed'));
+    chapterEl.appendChild(head);
+
+    const list = document.createElement('ul');
+    list.className = 'tracklist';
+    chapter.tasks.forEach(task => {
+      const idx = PLAYLIST.findIndex(p => p.ch === chapter.ch && p.t === task.t);
+      const li = document.createElement('li');
+      li.className = 'track';
+      li.dataset.index = idx;
+      li.innerHTML = `<span class="marker">${task.t}</span><span class="ttitle">${task.title}</span><span class="dur" data-file="${task.file}">--:--</span>`;
+      li.addEventListener('click', () => loadTrack(idx, true));
+      list.appendChild(li);
+    });
+    chapterEl.appendChild(list);
+    chaptersEl.appendChild(chapterEl);
+  });
+}
+
+function loadDurations() {
+  document.querySelectorAll('.dur').forEach(el => {
+    const probe = new Audio();
+    probe.preload = 'metadata';
+    probe.src = fileUrl(el.dataset.file);
+    probe.addEventListener('loadedmetadata', () => {
+      el.textContent = fmtTime(probe.duration);
+    });
+  });
+}
+
+function highlightActiveTrack() {
+  document.querySelectorAll('.track').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.index) === currentIndex);
+  });
+}
+
+function loadTrack(index, autoplay) {
+  if (index < 0 || index >= PLAYLIST.length) return;
+  currentIndex = index;
+  const track = PLAYLIST[index];
+  audio.src = fileUrl(track.file);
+  nowPlayingEl.innerHTML = `Hoofdstuk ${track.ch} · Taak ${track.t} — <b>${track.title}</b>`;
+  highlightActiveTrack();
+  continueBar.classList.remove('show');
+  if (autoplay) {
+    audio.play().catch(() => {});
+  }
+  saveProgress();
+}
+
+function updatePlayIcon() {
+  playBtn.textContent = audio.paused ? '▶' : '❚❚';
+}
+
+playBtn.addEventListener('click', () => {
+  if (currentIndex < 0) { loadTrack(0, true); return; }
+  if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+});
+
+prevBtn.addEventListener('click', () => {
+  if (audio.currentTime > 4) { audio.currentTime = 0; return; }
+  loadTrack(Math.max(0, currentIndex - 1), true);
+});
+nextBtn.addEventListener('click', () => loadTrack(Math.min(PLAYLIST.length - 1, currentIndex + 1), true));
+document.getElementById('back15').addEventListener('click', () => audio.currentTime = Math.max(0, audio.currentTime - 15));
+document.getElementById('fwd15').addEventListener('click', () => audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 15));
+
+speedBtn.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % SPEEDS.length;
+  audio.playbackRate = SPEEDS[speedIdx];
+  speedBtn.textContent = SPEEDS[speedIdx] + '×';
+});
+
+audio.addEventListener('play', updatePlayIcon);
+audio.addEventListener('pause', updatePlayIcon);
+audio.addEventListener('loadedmetadata', () => {
+  seek.max = audio.duration || 0;
+  durTimeEl.textContent = fmtTime(audio.duration);
+});
+audio.addEventListener('timeupdate', () => {
+  if (isSeeking) return;
+  seek.value = audio.currentTime;
+  curTimeEl.textContent = fmtTime(audio.currentTime);
+});
+audio.addEventListener('ended', () => {
+  if (autoplayToggle.checked && currentIndex < PLAYLIST.length - 1) {
+    loadTrack(currentIndex + 1, true);
+  }
+});
+setInterval(saveProgress, 4000);
+window.addEventListener('beforeunload', saveProgress);
+
+seek.addEventListener('input', () => { isSeeking = true; curTimeEl.textContent = fmtTime(Number(seek.value)); });
+seek.addEventListener('change', () => { audio.currentTime = Number(seek.value); isSeeking = false; });
+
+continueCard.addEventListener('click', () => {
+  const p = loadProgress();
+  if (!p) return;
+  loadTrack(p.index, false);
+  audio.addEventListener('loadedmetadata', function once() {
+    audio.currentTime = p.time || 0;
+    audio.play().catch(() => {});
+    audio.removeEventListener('loadedmetadata', once);
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.code === 'Space') { e.preventDefault(); playBtn.click(); }
+  if (e.code === 'ArrowRight') audio.currentTime += 15;
+  if (e.code === 'ArrowLeft') audio.currentTime -= 15;
+});
+
+renderChapters();
+loadDurations();
+
+const saved = loadProgress();
+if (saved && PLAYLIST[saved.index]) {
+  continueTitle.textContent = `${PLAYLIST[saved.index].title} (H${PLAYLIST[saved.index].ch} T${PLAYLIST[saved.index].t}) · ${fmtTime(saved.time)}`;
+  continueBar.classList.add('show');
+}
+
+// iOS "add to home screen" hint (only in Safari, not already installed, not dismissed)
+const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+if (isIos && !isStandalone && !localStorage.getItem(INSTALL_DISMISS_KEY)) {
+  installHint.classList.add('show');
+}
+dismissInstall.addEventListener('click', () => {
+  installHint.classList.remove('show');
+  localStorage.setItem(INSTALL_DISMISS_KEY, '1');
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

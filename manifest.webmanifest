@@ -1,0 +1,17 @@
+{
+  "name": "Welkom in Nederland — Audioboek",
+  "short_name": "NL Audioboek",
+  "description": "Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Nederlandse termen in het Nederlands, uitleg in het Engels.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4ecd8",
+  "theme_color": "#9a3324",
+  "lang": "nl",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
