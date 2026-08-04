@@ -1,5 +1,5 @@
-const SHELL_CACHE = "nl-audioboek-shell-v1";
-const AUDIO_CACHE = "nl-audioboek-audio-v1";
+const SHELL_CACHE = "nl-audioboek-shell-v2";
+const AUDIO_CACHE = "nl-audioboek-audio-v2";
 
 const SHELL_ASSETS = [
   "./",
