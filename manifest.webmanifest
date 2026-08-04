@@ -1,7 +1,7 @@
 {
   "name": "KNM Prep App — Welkom in Nederland",
   "short_name": "KNM Prep",
-  "description": "Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — Engels eerst, Nederlandse kernbegrippen tussen haakjes.",
+  "description": "Audioboek-app voor de KNM-samenvatting 'Welkom in Nederland' — English first, Dutch inserts in brackets.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

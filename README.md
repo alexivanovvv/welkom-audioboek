@@ -1,9 +1,10 @@
 # Welkom in Nederland — Audioboek
 
 Installeerbare webapp (PWA) die de KNM-samenvatting "Welkom in Nederland" als
-audioboek afspeelt: 7 hoofdstukken, 36 taken. Nederlandse kernbegrippen en
-eigennamen worden uitgesproken met een Nederlandse stem (`nl-NL-MaartenNeural`),
-de rest van de tekst met een Engelse stem (`en-US-GuyNeural`) — beide gratis
+audioboek afspeelt: 7 hoofdstukken, 36 taken. De interface toont Nederlandstalige
+en Engelstalige labels naast elkaar, en Nederlandse kernbegrippen/eigennamen
+worden uitgesproken met een Nederlandse stem (`nl-NL-MaartenNeural`), terwijl de
+rest van de tekst een Engelse stem (`en-US-GuyNeural`) gebruikt — beide gratis
 neurale stemmen via [edge-tts](https://github.com/rany2/edge-tts).
 
 ## Gebruiken
